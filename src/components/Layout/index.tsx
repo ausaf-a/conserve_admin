@@ -1,7 +1,7 @@
 import { AppBar, createStyles, Drawer, IconButton, makeStyles, Theme, Toolbar, Typography, useTheme, CssBaseline, List, ListItem, ListItemText } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import * as React from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link, useHistory } from 'react-router-dom'; 
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import clsx from 'clsx'
@@ -78,6 +78,8 @@ interface Props {
 const Layout: React.FC<Props> = props => {
     const classes = useStyles();
     const theme = useTheme();
+    const history = useHistory(); 
+
     const [open, setOpen] = React.useState(true);
 
     const handleDrawerOpen = () => {
@@ -129,23 +131,17 @@ const Layout: React.FC<Props> = props => {
 
                 <div className={classes.drawerContainer}>
                     <List>
-                        <Link to='/'>
-                            <ListItem button onClick={() => { }}>
-                                <ListItemText primary='Dashboard' />
-                            </ListItem>
-                        </Link>
+                        <ListItem button onClick={() => {history.replace('/')}}>
+                            <ListItemText primary='Dashboard' />
+                        </ListItem>
 
-                        <Link to='/deposits'>
-                            <ListItem button onClick={() => { }}>
-                                <ListItemText primary='Deposits' />
-                            </ListItem>
-                        </Link>
+                        <ListItem button onClick={() => {history.replace('/deposits')}}>
+                            <ListItemText primary='Deposits' />
+                        </ListItem>
 
-                        <Link to='/users'>
-                            <ListItem button onClick={() => { }}    >
-                                <ListItemText primary='Users' />
-                            </ListItem>
-                        </Link>
+                        <ListItem button onClick={() => {history.replace('/users');}}    >
+                            <ListItemText primary='Users' />
+                        </ListItem>
                     </List>
                 </div>
 
