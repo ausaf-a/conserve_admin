@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const UserView: React.FC<Props> = ({users}) => {
+const UserList: React.FC<Props> = ({users}) => {
     const classes = useStyles();
 
     return (
@@ -37,4 +37,4 @@ const UserView: React.FC<Props> = ({users}) => {
 }
 
 
-export default UserView; 
+export default UserList; 

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Typography, Theme, makeStyles, createStyles } from '@material-ui/core'
+import { Typography, Theme, makeStyles, createStyles, Box, Card } from '@material-ui/core'
 import { firestore, auth } from '../firebase';
 
 interface Props { }
@@ -7,7 +7,7 @@ interface Props { }
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         title: {
-            margin: '0px',
+            margin: '0px', 
             fontSize: '35px',
         },
         list: {
@@ -18,10 +18,14 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+
+
 const Dashboard: React.FC<Props> = () => {
     const classes = useStyles();
 
-    return <h1>{'hello'}</h1>
+    return (
+        <Typography className={classes.title} gutterBottom>Dashboard</Typography>
+    );
 }
 
 

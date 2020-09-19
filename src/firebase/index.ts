@@ -3,6 +3,7 @@ import 'firebase/storage'
 import 'firebase/firestore'
 import 'firebase/auth'
 import 'firebase/analytics'
+import Context from './FirebaseContext'
 
 const config = {
     apiKey: "AIzaSyDvc662A-BIM54Exk0rdsEyLDD-VqBqWIU",
@@ -21,5 +22,9 @@ export const app = firebase.app();
 export const auth = firebase.auth(); 
 export const storage = firebase.storage();
 export const firestore = firebase.firestore();
-export const analytics = firebase.analytics(); 
-export default firebase; 
+export const analytics = firebase.analytics();
+
+export const FirebaseContext =  Context; 
+
+export default firebase;
+

@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { Typography, Theme, makeStyles, createStyles, Card, Button, CircularProgress } from '@material-ui/core'
+import { Typography, Theme, makeStyles, createStyles, Card, Button, CircularProgress, Dialog, DialogTitle } from '@material-ui/core'
 import { firestore } from '../../firebase'
 import Deposit from './Deposit'
-import User from '../UserView/User'
+import User from '../UserList/User'
 
 interface Props {
     deposits: Array<IDeposit>;
@@ -22,10 +22,10 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-
-
-const DepositView: React.FC<Props> = ({ deposits }) => {
+const DepositList: React.FC<Props> = ({ deposits }) => {
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
+    const [image, setImage] = React.useState('');
 
     const testDep = {
         image: '',
@@ -35,7 +35,12 @@ const DepositView: React.FC<Props> = ({ deposits }) => {
         total: 42,
     } as IDeposit;
 
-
+    const showImage: (url: string) => void = (url) => {
+        if (!open) {
+            setImage(url);
+            setOpen(true);
+        }
+    }
 
     return (
         <div>
@@ -43,12 +48,15 @@ const DepositView: React.FC<Props> = ({ deposits }) => {
 
             <div className={classes.list}>
                 {deposits.map((deposit) => {
-                    return <Deposit deposit={deposit} />
+                    return <Deposit showImage={showImage} deposit={deposit} />
                 })}
-
             </div>
+
+            <Dialog maxWidth='lg' onClose={() => {setOpen(false)}} open={open}>
+                <img src={image}/>
+            </Dialog>
         </div>
     )
 }
 
-export default DepositView; 
+export default DepositList; 

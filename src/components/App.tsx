@@ -6,10 +6,10 @@ import * as React from 'react';
 import { Route, Switch } from "react-router-dom";
 import { firestore } from '../firebase';
 import Dashboard from './Dashboard';
-import DepositView from './DepositView';
+import DepositList from './DepositList';
 import Layout from './Layout/index';
-import UserView from './UserView';
-
+import UserList from './UserList';
+import Confirm from './Dialogs/Confirm';  
 
 interface Props {
 
@@ -35,10 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerContainer: {
       overflow: 'auto',
     },
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(3),
-    }
+
   }),
 );
 
@@ -53,6 +50,9 @@ const App: React.FC<Props> = props => {
   const [items, setItems] = React.useState([]);
   const [title, setTitle] = React.useState('Conserve Admin Dashboard');
 
+  /**
+   * Set up update callbacks after first    render
+   */
   React.useEffect(() => {
 
     /**
@@ -108,49 +108,13 @@ const App: React.FC<Props> = props => {
   return (
 
     <div className={classes.root}>
-
-      {/* <CssBaseline />
-
-      <Drawer
-        className={classes.drawer}
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <Toolbar />
-        <div className={classes.drawerContainer}>
-          <List>
-            <ListItem button onClick={() => { setView('dashboard') }}>
-              <ListItemText primary='Dashboard' />
-            </ListItem>
-
-            <ListItem button onClick={() => { setView('deposits') }}>
-              <ListItemIcon>
-                <MailIcon />
-              </ListItemIcon>
-              <ListItemText primary='Deposits' />
-            </ListItem>
-
-            <ListItem button onClick={() => { setView('users') }}>
-              <ListItemIcon>
-                <MailIcon />
-              </ListItemIcon>
-              <ListItemText primary='Users' />
-            </ListItem>
-          </List>
-        </div>
-      </Drawer> */}
-
-
+ 
       <Layout title={title}>
-        <main className={classes.content}>
           <Switch>
             <Route exact path='/' render={() => <Dashboard />} />
-            <Route exact path='/users' render={() => <UserView users={users} />} />
-            <Route exact path='/deposits' render={() => <DepositView deposits={deposits} />} />
+            <Route exact path='/users' render={() => <UserList users={users} />} />
+            <Route exact path='/deposits' render={() => <DepositList deposits={deposits} />} />
           </Switch>
-        </main>
       </Layout>
 
     </div>

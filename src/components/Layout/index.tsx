@@ -1,16 +1,28 @@
-import { AppBar, createStyles, Drawer, IconButton, makeStyles, Theme, Toolbar, Typography, useTheme, CssBaseline, List, ListItem, ListItemText } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
 import * as React from 'react';
-import { Link, useHistory } from 'react-router-dom'; 
+import clsx from 'clsx';
+import { useHistory } from 'react-router-dom';
+
+import { AppBar, createStyles, CssBaseline, 
+    Drawer, IconButton, List, ListItem, 
+    ListItemText, makeStyles, Theme, Toolbar,
+     Typography, useTheme } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import clsx from 'clsx'
+import MenuIcon from '@material-ui/icons/Menu';
+
 const drawerWidth = 240;
+
+interface Props {
+    title: string,
+    children: any,
+}
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             display: 'flex',
+            width: '100%',
+            height: '100%', 
         },
         appBar: {
             transition: theme.transitions.create(['margin', 'width'], {
@@ -69,11 +81,6 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-interface Props {
-    title: string,
-    children: any,
-}
-
 
 const Layout: React.FC<Props> = props => {
     const classes = useStyles();
@@ -114,6 +121,7 @@ const Layout: React.FC<Props> = props => {
                     </Typography>
                 </Toolbar>
             </AppBar>
+          
             <Drawer
                 className={classes.drawer}
                 variant="persistent"
@@ -147,6 +155,7 @@ const Layout: React.FC<Props> = props => {
 
 
             </Drawer>
+            
             <main
                 className={clsx(classes.content, {
                     [classes.contentShift]: open,

@@ -13,6 +13,7 @@ import ItemsList from './ItemsList'
 import testImg from './img.jpeg'
 interface Props {
     deposit: IDeposit,
+    showImage: (url: string) => void,  
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -31,12 +32,11 @@ const useStyles = makeStyles((theme: Theme) =>
             alignSelf: 'flex-end'
         },
         photo: {
-            justifySelf: 'left',
-            paddingTop: '20%',
-            width: '20%',
-            height: '20%'
-            // paddingTop: '56.25%', // 16:9,
-            // marginTop:'30'
+            width: '300px',
+            height: '300px',
+            padding: 0, 
+            margin: 0, 
+            fit: 'cover', 
         },
         content: {
             padding: 0,
@@ -61,64 +61,67 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const Deposit: React.FC<Props> = ({ deposit }) => {
+
+
+const Deposit: React.FC<Props> = ({ deposit, showImage }) => {
     const classes = useStyles();
 
     const setDeposit = (userId: string, depositId: string, approved: boolean) => {
         const depositRef = firestore.doc(`/usersummary/${userId}/deposits/${depositId}`);
         depositRef.update({
             status: approved ? 'approved' : 'rejected'
-        }).then(() => console.log('updated deposit'));
+        }).then(() => {
+            if (approved) {
+                const user = firestore.doc(`usersummary/${userId}`)
+                const val = deposit.total;
+                user.update({
+                    totalpoints: firebase.firestore.FieldValue.increment(val * 10),
+                    totalrecycled: firebase.firestore.FieldValue.increment(val),
+                }).then(() => console.log('updated user totals'))
+    
+                firestore.collection('feedtransactions').doc().set({
+                    userId: deposit.userId,
+                    totalrecycled: deposit.total,
+                }).then(() => console.log('added to feedtransactions'));
+            }
+        });
 
-        if (approved) {
-            const user = firestore.doc(`usersummary/${userId}`)
-            const val = deposit.total; 
-            user.update({
-                totalpoints: firebase.firestore.FieldValue.increment(val*10), 
-                totalrecycled: firebase.firestore.FieldValue.increment(val), 
-            })
 
-            firestore.collection('feedtransactions').doc().set({
-                userId: deposit.userId, 
-                totalrecycled: deposit.total, 
-            }).then();
-            
-        }
     }
 
     const changeCount = (key: string, add: boolean) => {
         const ref = firestore.doc(`/usersummary/${deposit.userId}/deposits/${deposit.id}`);
         const val = add ? 1 : -1;
-        
-        const newItems = Object.assign({}, deposit.items); 
-        newItems[key] = newItems[key] + val; 
+
+        const newItems = Object.assign({}, deposit.items);
+        newItems[key] = newItems[key] + val;
 
         const delta = {
             items: newItems,
-            total: firebase.firestore.FieldValue.increment(val), 
+            total: firebase.firestore.FieldValue.increment(val),
         };
 
-        ref.update(delta).then(() => console.log('updated count for ' + key)); 
+        ref.update(delta).then(() => console.log('updated count for ' + key));
     }
 
     return (
 
-        <Card className={classes.root}>
-            <Box flexDirection='row'>
-                <Button className={classes.left}>Justified Left</Button>
-                <Button className={classes.right}>Justified Right</Button>
-                {/* <Box flexGrow={1}> */}
+        <Card className={classes.root} > 
+            <Box display='flex' flexDirection='row'>
+                
+                <Box flexShrink={1}>
+                    <img src={deposit.image} className={classes.photo} onClick={() => {showImage(deposit.image)}}/>
+                </Box>
 
-                {/* </Box> */}
-
-
-                <Box alignSelf='flex-end' flexGrow={2}>
+                <Box flexGrow={2}>
                     <CardHeader
                         className={classes.header}
                         subheader={deposit.id}
                         title={`${deposit.total} items`}
                     />
                     <CardContent className={classes.content}>
+
+                        {/* <CardMedia src={deposit.image} /> */}
                         <ItemsList items={deposit.items} changeCount={changeCount} />
                     </CardContent>
                 </Box>
